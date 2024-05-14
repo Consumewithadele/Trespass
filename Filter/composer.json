@@ -1,0 +1,22 @@
+{
+    "name": "trespass/filter",
+    "description": "A magento2 module to create layered filter banner",
+    "require": {
+        "magento/module-catalog": "*",
+        "magento/module-layered-navigation": "*",
+        "magento/module-graph-ql": "*"
+    },
+    "type": "magento2-module",
+    "version": "1.0.0",
+    "license": [
+        "proprietary"
+    ],
+    "autoload": {
+        "files": [
+            "registration.php"
+        ],
+        "psr-4": {
+            "Trespass\\Filter\\": ""
+        }
+    }
+}

@@ -1,0 +1,45 @@
+<?php
+    $categoryId = $block->getCategoryId();
+    $subCategories = $block->getChildCategories();
+    $params = $block->getParams();    
+    $currency = $block->getCurrencySymbol();
+    $currentUrl = $this->getUrl('*/*/*', array('_use_rewrite' => true, '_forced_secure' => true));
+?>
+<div class="filter-states closed">
+    <a href="#" class="title action close">Filters</a>
+    <div class="filter-items"></div>
+    <div class="block-action">
+        <div class="block-actions filter-actions">
+            <div>
+                <a href="<?= $currentUrl ?>" class="action filter-clear"><span>Clear Filters</span></a>
+                <a href="#" class="action filter-apply closed"><span>Apply Filters</span></a>
+            </div>
+        </div>
+    </div>
+</div>  
+<div class="toolbar-wrapper closed">
+    <div class="inline">
+        <a href="#" class="filter-button">Filter</a>
+        <div class="filterbar" id="filter-component" data-bind="scope:'filtercomponent'">    
+            <!-- ko template: getTemplate() --><!-- /ko -->
+            <script type="text/x-magento-init">
+            {
+                "#filter-component": {
+                    "Magento_Ui/js/core/app": {
+                    "components": {
+                            "filtercomponent": {
+                                "component": "Trespass_Filter/js/filter-component",
+                                "categoryId": <?= $categoryId ?>,
+                                "params": <?= json_encode($params) ?>,
+                                "currencySymbol": "<?= $currency ?>",
+                                "currentUrl": "<?= $currentUrl ?>",
+                                "subCategories": <?= json_encode($subCategories) ?>
+                            }
+                        }
+                    }
+                }
+            }
+            </script>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,125 @@
+<?php
+error_reporting(E_ERROR | E_PARSE);
+$objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+$product = $objectManager->get('Magento\Framework\Registry')->registry('current_product'); 
+$storeManager = $objectManager->get('\Magento\Store\Model\StoreManagerInterface');                             
+$baseurl = $storeManager->getStore()->getBaseUrl();
+
+
+$producttype = $product->getData('type_id');
+if($producttype == 'grouped'):
+$childProductCollection = $product->getTypeInstance()->getAssociatedProducts($product);
+$parentid = array(); 
+foreach($childProductCollection as $child):
+	$parentid = $child->getId();
+endforeach; 
+$simple = $objectManager->get('Magento\Catalog\Model\Product')->load($parentid);
+$replacepartnumber = $simple->getData('altitec_partno');
+$shortlist = $simple->getData('altitec_passertil');   
+else:
+$replacepartnumber = $product->getData('altitec_partno');
+$shortlist = $product->getData('altitec_passertil'); 
+endif;
+if(!empty($product->getData('altitec_partno'))) { 
+
+if (strpos($product->getData('altitec_partno'), ',') !== false) {
+   $partnumber = explode(",",$replacepartnumber?? '');
+}  
+else
+{
+	$partnumber = "";
+}
+ }
+if(!empty($shortlist)) { 
+
+if (strpos($shortlist, ',') !== false) {
+   $short = explode(",",$shortlist ?? '');
+} 
+else
+{
+	$short = "";
+}
+ }
+
+?>  
+<div class="row"> 
+	<div class="col-md-6 col-sm-12">
+	<?php	if (is_array($partnumber) || is_object($partnumber)): ?> 
+	<div class="dropdown" id="dropdown1" >
+	<h3  class="dropbtnrpn"><?php echo __('Replace Part Number'); ?></h3>  
+	  
+	  <ul id="partnumberdropdown" class="dropdown-content partnumberdropdown"> 
+		
+		<?php foreach($partnumber as $pno): ?>
+			<li><a target="_blank" href="<?php echo $baseurl."catalogsearch/result/?q=".trim($pno); ?>" title="<?php echo $pno; ?>"><?php echo $pno; ?></a></li>  
+		<?php endforeach; ?> 
+		
+	  </ul>
+	</div>
+	<?php endif; ?>
+	</div>
+	<div class="col-md-6 col-sm-12"> 
+	<?php	if (is_array($short) || is_object($short)): ?>
+	<?php if($producttype == 'simple'): ?>
+	<div class="dropdown" id="dropdown2" >
+	<h3  class="dropbtnrpn"  title="Fit For Long List"><?php echo __('Fit For Long List'); ?></h3>   
+	  <ul id="longlistdropdown" class="dropdown-content partnumberdropdown">  
+		<?php foreach($short as $sno): ?>
+			<li><a target="_blank" href="<?php echo $baseurl."catalogsearch/result/?q=".trim($sno); ?>" title="<?php echo $sno; ?>"><?php echo $sno; ?></a></li>   
+		<?php endforeach; ?>
+	  </ul>
+	</div>
+	<?php endif; ?>
+	<?php else: ?>
+		
+<?php /* ?>		<?php
+echo $this->getLayout()
+->createBlock('Magento\Cms\Block\Block')
+->setBlockId('product_guarantee')
+->toHtml();
+?><?php */ ?>
+	<?php endif; ?> 
+	</div>
+</div>
+
+<style> 
+.dropbtnrpn .partnumberdropdown{margin-bottom:0;} 
+.dropbtn {background-color: #00aeef; color: white;font-size: 16px;border: none;cursor: pointer;} 
+.dropbtn:hover, .dropbtn:focus {background-color: #00aeef; }
+.product-info-main .dropdown {position: relative;display: block;margin-top: 20px;} 
+@media screen and (max-device-width: 480px){.dropdown {position: relative;display: block;margin-bottom: 10px;margin-top: 10px;}}
+.dropdown-content {height:150px;display: block;background-color: #f9f9f9;min-width: 250px;width: 100%;overflow: auto;z-index: 2;}
+.dropdown-content a {color: black;padding: 6px 16px;text-decoration: none;display: block;} 
+.dropdown a:hover {background-color: #f1f1f1} 
+.show {display:block;}
+.dropbtnfll {width: 100%;}
+.dropbtnrpn {font-size: 16px;width: 100%;background-color: #00aeef;color: #fff;font-family:inherit;margin-bottom: 0;text-align: center;padding-top: 5px;padding-bottom: 5px;font-weight: 200;}
+#close-dropdown1{position: absolute;top: 2px;float: right;right:6px;font-size: 23px;display:none;} 
+#close-dropdown2{position: absolute;top: 2px;float: right;right:6px;font-size: 23px;display:none;} 
+@media (min-width: 1025px) and (max-width: 1280px) {
+.catalog-product-view .field.qty.clearfix{float: left;margin-right: 16px;margin-top: 12px;}
+.catalog-product-view product-social-links.clearfix {float: right;width: auto;}
+.catalog-product-view .breadcrumbs ul {width: 1170px;margin-left: auto;margin-right: auto;} 
+}
+@media (min-width: 768px){
+.col-md-6 {width: 50%;float: left;position: relative;
+    min-height: 1px;
+    padding-right: 15px;
+    padding-left: 15px;}
+}
+.price-including-tax + .price-excluding-tax:before, .weee[data-label]:before {
+    content: attr(data-label) ": ";
+    font-size: 1.1rem;
+}
+.product-info-main .price-box .price-including-tax + .price-excluding-tax .price, .product-options-bottom .price-box .price-including-tax + .price-excluding-tax .price, .product-info-main .price-box .weee + .price-excluding-tax .price, .product-options-bottom .price-box .weee + .price-excluding-tax .price, .product-info-main .price-box .weee .price, .product-options-bottom .price-box .weee .price {
+    font-size: 1.2rem;
+    font-weight: 700;
+}
+.product-info-main .price-box .price-wrapper .price, .product-options-bottom .price-box .price-wrapper .price {
+    font-size: 24px;
+} 
+.price-including-tax,.price-excluding-tax {
+    display: block;
+    color: #ea1b25;
+}
+</style>

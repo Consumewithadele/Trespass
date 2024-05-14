@@ -1,0 +1,8 @@
+
+<?php
+$objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+$product = $objectManager->get('Magento\Framework\Registry')->registry('current_product'); ?>  
+<div class="productid">
+<span><?php echo "Product Id :";  ?> </span> 
+<?php echo $product->getId(); ?>  
+</div>

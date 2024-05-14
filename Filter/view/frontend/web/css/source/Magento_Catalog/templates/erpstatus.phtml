@@ -1,0 +1,7 @@
+<?php   
+$availability = $block->getLayout()->createBlock('BoostMyShop\AvailabilityStatus\Block\Product\View\Type\Simple'); 
+$defaultstatus = $block->getLayout()->createBlock('BoostMyShop\AdvancedStock\Block\Frontend\Product\Stocks'); ?>
+ <?php foreach($defaultstatus->getStocks() as $stock): ?> 
+     <p><span style="font-weight:700;"><?php echo __('stock status :'); ?> </span><span class="stockqty"><?php echo $stock->getwi_available_quantity(); ?> <?php echo __('units available'); ?></span><p> 
+  <?php endforeach; ?>
+<p><?php echo $availability->getMessage() ?></p> 
